@@ -33,13 +33,17 @@ struct ContentView: View {
             Text(show?.description ?? "Descrizione dello show")
                 .padding()
         }
-        .onAppear {
-            Task {
-                do {
-                    show = try await getShow()
-                } catch {
-                    print("Error fetching show data: \(error)")
-                }
+        .task {
+            do {
+                show = try await getShow()
+            } catch PPError.invalidURL {
+                print("Invalid URL")
+            } catch PPError.invalidResponse {
+                print("Invalid Response")
+            } catch PPError.invalidData {
+                print("Invalid Data")
+            } catch {
+                print ("unexpected error")
             }
         }
         .padding()
